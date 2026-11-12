@@ -1,0 +1,1732 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia Interativo de Prototipagem de Projetos | PCP SENAI</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        senai: {
+                            orange: '#f97316',
+                            darkorange: '#ea580c',
+                            blue: '#3b82f6',
+                            green: '#10b981',
+                            amber: '#f59e0b',
+                            red: '#ef4444',
+                            slate: '#0f172a',
+                            card: '#1e293b'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        /* Custom scrollbars */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        .tab-btn.active {
+            border-bottom-color: #f97316;
+            color: #f97316;
+            background-color: rgba(249, 115, 22, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-orange-500 selection:text-white">
+
+    <!-- HEADER / TOPBAR -->
+    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-40 shadow-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                
+                <!-- BRANDING -->
+                <div class="flex items-center gap-3">
+                    <div class="bg-gradient-to-br from-orange-500 to-amber-600 p-2.5 rounded-lg text-slate-950 font-black shadow-lg shadow-orange-500/20">
+                        <i class="fa-solid to-black fa-industry text-xl"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="bg-orange-500/20 text-orange-400 text-xs px-2 py-0.5 rounded font-bold uppercase tracking-wider border border-orange-500/30">SENAI PCP</span>
+                            <span class="text-slate-400 text-xs">Modalidade 80/20</span>
+                        </div>
+                        <h1 class="text-lg font-bold tracking-tight text-white">Prototipagem de Projetos Industriais</h1>
+                    </div>
+                </div>
+
+                <!-- ACTIONS & PROGRESS -->
+                <div class="flex items-center justify-between md:justify-end gap-4">
+                    <!-- BARRA DE PROGRESSO GLOBAL -->
+                    <div class="flex flex-col w-44">
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-slate-400">Progresso Geral</span>
+                            <span id="global-progress-text" class="font-bold text-orange-400">0%</span>
+                        </div>
+                        <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden border border-slate-700">
+                            <div id="global-progress-bar" class="bg-gradient-to-r from-orange-500 to-emerald-500 h-full w-0 transition-all duration-500"></div>
+                        </div>
+                    </div>
+
+                    <!-- MODAL TRIGGER: COLA PRESENCIAL -->
+                    <button onclick="toggleModal('modal-presencial')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 hover:border-orange-500/50 px-3 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 transition-all shadow-md">
+                        <i class="fa-solid fa-clipboard-list text-orange-400"></i>
+                        <span>Guia dos Encontros Presenciais</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- NAV TABS -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-2">
+            <nav class="flex space-x-2 border-b border-slate-800 overflow-x-auto no-scrollbar">
+                <button onclick="switchTab('tab1')" id="btn-tab1" class="tab-btn active font-medium text-sm px-4 py-3 border-b-2 border-transparent hover:text-slate-200 whitespace-nowrap transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-lightbulb"></i> Aula 1: Pensamento Crítico & Requisitos
+                </button>
+                <button onclick="switchTab('tab2')" id="btn-tab2" class="tab-btn font-medium text-sm px-4 py-3 border-b-2 border-transparent hover:text-slate-200 whitespace-nowrap transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-screwdriver-wrench"></i> Lab 1: Protótipo Kanban R$ 50
+                </button>
+                <button onclick="switchTab('tab3')" id="btn-tab3" class="tab-btn font-medium text-sm px-4 py-3 border-b-2 border-transparent hover:text-slate-200 whitespace-nowrap transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-chart-line"></i> Aula 2: Custos, VPL & Riscos
+                </button>
+                <button onclick="switchTab('tab4')" id="btn-tab4" class="tab-btn font-medium text-sm px-4 py-3 border-b-2 border-transparent hover:text-slate-200 whitespace-nowrap transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-vial-circle-check"></i> Lab 2: Testes, Iteração & Pitch
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
+
+        <!-- ========================================== -->
+        <!-- ABA 1: AULA ONLINE 1                      -->
+        <!-- ========================================== -->
+        <section id="tab1" class="tab-content block space-y-8">
+
+            <!-- HERO & ESTUDO DE CASO INTRODUTÓRIO -->
+            <div class="bg-gradient-to-r from-slate-900 via-slate-900 to-slate-800 border border-slate-800 rounded-2xl p-6 sm:p-8 relative overflow-hidden shadow-2xl">
+                <div class="absolute -right-10 -bottom-10 opacity-10 text-orange-500 pointer-events-none">
+                    <i class="fa-solid fa-brain text-9xl"></i>
+                </div>
+                <div class="relative z-10 max-w-3xl space-y-4">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 bg-orange-500/10 border border-orange-500/20 text-orange-400 rounded-full text-xs font-semibold">
+                        <i class="fa-solid fa-rocket"></i> Inovação & Intraempreendedorismo no PCP
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Do Bloco de Madeira ao Chão de Fábrica</h2>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        Em 1995, <strong>Jeff Hawkins</strong> inventou o <em>PalmPilot</em> (o ancestral do smartphone). Antes de gastar $1 milhão com eletrônica, ele cortou um pedaço de madeira no tamanho exato do bolso, colou um papel com o desenho da tela e passou semanas carregando o bloco na camisa, simulando interações com um palito de dente na frente dos colegas. 
+                    </p>
+                    <div class="p-4 bg-slate-950/70 border border-slate-800 rounded-xl space-y-2 text-xs text-slate-300">
+                        <div class="font-bold text-orange-400 uppercase tracking-wide flex items-center gap-2">
+                            <i class="fa-solid fa-industry"></i> Conexão Direta com o Técnico de PCP:
+                        </div>
+                        <p>
+                            Você não precisa abrir uma startup para inovar. O <strong>Intraempreendedorismo</strong> é aplicar essa mesma mentalidade dentro da fábrica! Em vez de encomendar um software ERP customizado de R$ 80 mil para controlar trocas de moldes (setup), o técnico de PCP constrói um protótipo físico rápido com cartolinas e post-its para validar a lógica operacional antes de gastar qualquer centavo da empresa.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TEORIA APROFUNDADA - ACORDEÕES DIDÁTICOS -->
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-book-open text-orange-500"></i> Conceitos Fundamentais da Prototipagem
+                    </h3>
+                    <span class="text-xs text-slate-400">Clique para expandir e ver os 3 níveis de explicação</span>
+                </div>
+
+                <!-- CONCEITO 0: O QUE É UM PROJETO? (NOVO) -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+                    <button onclick="toggleAccordion('acc0')" class="w-full px-6 py-4 text-left font-semibold text-slate-100 bg-slate-800/50 hover:bg-slate-800 flex justify-between items-center transition">
+                        <span class="flex items-center gap-3">
+                            <span class="w-7 h-7 rounded-full bg-orange-500/20 text-orange-400 flex items-center justify-center text-xs font-bold">1</span>
+                            O que é um Projeto? (Definição e as 3 Características: Temporário, Único e Progressivo)
+                        </span>
+                        <i id="acc0-icon" class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+                    </button>
+                    <div id="acc0" class="hidden p-6 border-t border-slate-800 space-y-4 bg-slate-900/60">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <!-- O que é -->
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                                <span class="text-xs font-bold text-orange-400 uppercase tracking-wider block">💡 O que é na prática</span>
+                                <p class="text-xs text-slate-300 leading-relaxed">
+                                    Um <strong>Projeto</strong> é um esforço empreendido para criar um produto, serviço ou resultado exclusivo. Diferente da <em>Operação Contínua</em> (bater peça todo dia igual), todo projeto possui 3 pilares: é <strong>Temporário</strong> (tem data de início e fim definidos), <strong>Único</strong> (entrega algo que não existia antes naquele formato) e <strong>Progressivo</strong> (desenvolvido em etapas e refinado aos poucos).
+                                </p>
+                            </div>
+                            <!-- Dia a dia -->
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                                <span class="text-xs font-bold text-sky-400 uppercase tracking-wider block">🏠 Exemplo no dia a dia</span>
+                                <p class="text-xs text-slate-300 leading-relaxed">
+                                    <strong>Construir uma casa:</strong> É um <em>Projeto</em> (começa na fundação e termina na entrega das chaves = Temporário; o terreno e a planta são exclusivos = Único; sobe tijolo por tijolo = Progressivo). Já <strong>limpar a casa toda semana</strong> não é projeto, é uma rotina/operação!
+                                </p>
+                            </div>
+                            <!-- Chão de Fábrica -->
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                                <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider block">🏭 Exemplo real no PCP</span>
+                                <p class="text-xs text-slate-300 leading-relaxed">
+                                    Emitir ordens de produção diárias é <em>Rotina do PCP</em>. Agora, <strong>Criar e implantar um novo Painel Visual de Controle de Matéria-Prima em 30 dias</strong> é um <em>Projeto</em>! Começa no levantamento de requisitos, passa pelo protótipo sujo (progressivo) e encerra quando a equipe passa a usá-lo no dia a dia.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CONCEITO 1: SENSO COMUM VS SENSO CRÍTICO -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+                    <button onclick="toggleAccordion('acc1')" class="w-full px-6 py-4 text-left font-semibold text-slate-100 bg-slate-800/50 hover:bg-slate-800 flex justify-between items-center transition">
+                        <span class="flex items-center gap-3">
+                            <span class="w-7 h-7 rounded-full bg-orange-500/20 text-orange-400 flex items-center justify-center text-xs font-bold">2</span>
+                            Senso Comum vs. Senso Crítico Reflexivo no PCP
+                        </span>
+                        <i id="acc1-icon" class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+                    </button>
+                    <div id="acc1" class="hidden p-6 border-t border-slate-800 space-y-4 bg-slate-900/60">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <!-- O que é -->
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                                <span class="text-xs font-bold text-orange-400 uppercase tracking-wider block">💡 O que é na prática</span>
+                                <p class="text-xs text-slate-300 leading-relaxed">
+                                    O <strong>Senso Comum</strong> baseia-se em achismos, tradição verbal e intuição não testada ("sempre foi feito assim"). O <strong>Senso Crítico Reflexivo</strong> exige observação empírica, coleta de dados, hipóteses testáveis e validação com evidências reais.
+                                </p>
+                            </div>
+                            <!-- Dia a dia -->
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                                <span class="text-xs font-bold text-sky-400 uppercase tracking-wider block">🏠 Exemplo no dia a dia</span>
+                                <p class="text-xs text-slate-300 leading-relaxed">
+                                    <em>Senso Comum:</em> "A fila do restaurante demora porque o cozinheiro é devagar." <br>
+                                    <em>Senso Crítico:</em> Medir o tempo de atendimento e descobrir que o gargalo é o leitor de cartão que trava na hora do pagamento.
+                                </p>
+                            </div>
+                            <!-- Chão de Fábrica -->
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                                <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider block">🏭 Exemplo real no PCP</span>
+                                <p class="text-xs text-slate-300 leading-relaxed">
+                                    <em>Senso Comum:</em> "Precisamos comprar uma máquina nova de R$ 500 mil porque a Prensa 02 não dá conta da demanda." <br>
+                                    <em>Senso Crítico:</em> Prototipar um quadro visual de Setup e descobrir que a prensa fica 3 horas parada esperando ferramentas do almoxarifado.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CONCEITO 2: CICLO DE VIDA DO PROJETO -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+                    <button onclick="toggleAccordion('acc2')" class="w-full px-6 py-4 text-left font-semibold text-slate-100 bg-slate-800/50 hover:bg-slate-800 flex justify-between items-center transition">
+                        <span class="flex items-center gap-3">
+                            <span class="w-7 h-7 rounded-full bg-orange-500/20 text-orange-400 flex items-center justify-center text-xs font-bold">3</span>
+                            Ciclo de Vida do Projeto no PCP (5 Etapas PMBOK)
+                        </span>
+                        <i id="acc2-icon" class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+                    </button>
+                    <div id="acc2" class="hidden p-6 border-t border-slate-800 space-y-4 bg-slate-900/60">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                                <span class="text-xs font-bold text-orange-400 uppercase tracking-wider block">💡 O que é na prática</span>
+                                <p class="text-xs text-slate-300 leading-relaxed">
+                                    É a sequência lógica pela qual todo projeto passa: <strong>Iniciação</strong> (definir o problema), <strong>Planejamento</strong> (requisitos e protótipo), <strong>Execução</strong> (construção), <strong>Monitoramento</strong> (testes) e <strong>Encerramento</strong> (entrega/operação).
+                                </p>
+                            </div>
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                                <span class="text-xs font-bold text-sky-400 uppercase tracking-wider block">🏠 Exemplo no dia a dia</span>
+                                <p class="text-xs text-slate-300 leading-relaxed">
+                                    Organizar um churrasco: Iniciação (Decidir fazer), Planejamento (Lista de compras e orçamento), Execução (Comprar e assar), Monitoramento (Verificar se a carne está acabando), Encerramento (Limpar e dividir os custos).
+                                </p>
+                            </div>
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                                <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider block">🏭 Exemplo real no PCP</span>
+                                <p class="text-xs text-slate-300 leading-relaxed">
+                                    Implantação de Kanban: Iniciação (Alta taxa de peças paradas), Planejamento (Desenhar protótipo de papel e definir cartões), Execução (Colocar o quadro na linha), Monitoramento (Cronometrar tempo de setup), Encerramento (Padronizar no ERP).
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CONCEITO 3: ENGENHARIA DE REQUISITOS -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+                    <button onclick="toggleAccordion('acc3')" class="w-full px-6 py-4 text-left font-semibold text-slate-100 bg-slate-800/50 hover:bg-slate-800 flex justify-between items-center transition">
+                        <span class="flex items-center gap-3">
+                            <span class="w-7 h-7 rounded-full bg-orange-500/20 text-orange-400 flex items-center justify-center text-xs font-bold">4</span>
+                            Engenharia de Requisitos: A Tríade Obrigatória
+                        </span>
+                        <i id="acc3-icon" class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+                    </button>
+                    <div id="acc3" class="hidden p-6 border-t border-slate-800 space-y-4 bg-slate-900/60">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                                <span class="text-xs font-bold text-orange-400 uppercase tracking-wider block">💡 O que é na prática</span>
+                                <p class="text-xs text-slate-300 leading-relaxed">
+                                    Um requisito bem especificado EXIGE 3 elementos: <strong>[1. Requisito Claro] + [2. Usuário Relacionado] + [3. Condição Observável de Aceitação]</strong>. Sem isso, o protótipo vira um "desejo vago".
+                                </p>
+                            </div>
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                                <span class="text-xs font-bold text-sky-400 uppercase tracking-wider block">🏠 Exemplo no dia a dia</span>
+                                <p class="text-xs text-slate-300 leading-relaxed">
+                                    <em>Vago:</em> "Quero uma entrega rápida da pizza." <br>
+                                    <em>Com Tríade:</em> "O cliente (Usuário) quer receber a pizza (Requisito) em no máximo 30 minutos na porta de casa e quentinha (>60°C) (Condição Observável)."
+                                </p>
+                            </div>
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                                <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider block">🏭 Exemplo real no PCP</span>
+                                <p class="text-xs text-slate-300 leading-relaxed">
+                                    <em>Vago:</em> "O quadro de produção deve ser fácil de ver." <br>
+                                    <em>Com Tríade:</em> "O Operador de Máquina (Usuário) deve identificar se a ordem está liberada ou travada (Requisito) a 3 metros de distância em menos de 5 segundos via etiqueta verde ou vermelha (Condição Observável)."
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CONCEITO 4: TIPOS DE PROTÓTIPOS E PROTÓTIPO SUJO -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+                    <button onclick="toggleAccordion('acc4')" class="w-full px-6 py-4 text-left font-semibold text-slate-100 bg-slate-800/50 hover:bg-slate-800 flex justify-between items-center transition">
+                        <span class="flex items-center gap-3">
+                            <span class="w-7 h-7 rounded-full bg-orange-500/20 text-orange-400 flex items-center justify-center text-xs font-bold">5</span>
+                            Tipos de Protótipos & O Conceito de "Protótipo Sujo" (Quick & Dirty)
+                        </span>
+                        <i id="acc4-icon" class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+                    </button>
+                    <div id="acc4" class="hidden p-6 border-t border-slate-800 space-y-4 bg-slate-900/60">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                                <span class="text-xs font-bold text-orange-400 uppercase tracking-wider block">💡 O que é na prática</span>
+                                <p class="text-xs text-slate-300 leading-relaxed">
+                                    Protótipos vão de <strong>Baixa Fidelidade</strong> (papel, papelão - "sujo") até <strong>Alta Fidelidade</strong> (software completo ou maquete usinada). O <em>Protótipo Sujo</em> foca em aprender rápido gastando o mínimo, evitando o apego emocional.
+                                </p>
+                            </div>
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                                <span class="text-xs font-bold text-sky-400 uppercase tracking-wider block">🏠 Exemplo no dia a dia</span>
+                                <p class="text-xs text-slate-300 leading-relaxed">
+                                    Desenhar a planta da reforma da sua cozinha num guardanapo de papel para ver se a geladeira cabe ao lado do fogão antes de comprar os móveis planejados.
+                                </p>
+                            </div>
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                                <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider block">🏭 Exemplo real no PCP</span>
+                                <p class="text-xs text-slate-300 leading-relaxed">
+                                    Montar o fluxo de caixas de componentes na linha de montagem usando caixas de sapato vazias e fita adesiva amarela no chão antes de mandar soldar as prateleiras de aço definitivo.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NOVA SEÇÃO: GALERIA PRÁTICA DE EXEMPLOS DE APLICAÇÃO NO PCP -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-5">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-wand-magic-sparkles text-orange-500"></i> Exemplos Reais de Aplicação de Protótipos na Indústria (PCP)
+                        </h3>
+                        <p class="text-xs text-slate-400">Veja como grandes indústrias testam projetos de melhoria gastando quase nada antes de comprar equipamentos ou softwares.</p>
+                    </div>
+                    <span class="text-[11px] bg-orange-500/10 text-orange-400 border border-orange-500/30 px-2.5 py-1 rounded-md font-semibold whitespace-nowrap">Inspiração para a Aula Presencial</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Exemplo 1 -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 flex flex-col justify-between space-y-3 hover:border-orange-500/40 transition">
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400">Gestão Visual de Pedidos</span>
+                                <i class="fa-solid fa-table-columns text-slate-500"></i>
+                            </div>
+                            <h4 class="text-sm font-bold text-white">1. Quadro Heijunka de Papel Kraft</h4>
+                            <p class="text-xs text-slate-300 leading-relaxed">
+                                <strong>Problema:</strong> O PCP não sabia quais ordens tinham matéria-prima completa no almoxarifado.
+                            </p>
+                            <p class="text-xs text-slate-400 leading-relaxed">
+                                <strong>Protótipo Sujo (R$ 18):</strong> Cartolina colada na parede com fita crepe dividindo horários e post-its verdes (material OK) e vermelhos (falta item). Testado por 3 dias antes de comprar um painel magnético de R$ 1.200.
+                            </p>
+                        </div>
+                        <div class="pt-2 border-t border-slate-900 text-[11px] text-orange-400 font-medium">
+                            <i class="fa-solid fa-check-double mr-1"></i> Resultado: Reduziu em 70% as idas desnecessárias ao estoque.
+                        </div>
+                    </div>
+
+                    <!-- Exemplo 2 -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 flex flex-col justify-between space-y-3 hover:border-orange-500/40 transition">
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-sky-500/20 text-sky-400">Layout e Abastecimento</span>
+                                <i class="fa-solid fa-boxes-stacked text-slate-500"></i>
+                            </div>
+                            <h4 class="text-sm font-bold text-white">2. Supermercado de Peças em Papelão (Moonshine)</h4>
+                            <p class="text-xs text-slate-300 leading-relaxed">
+                                <strong>Problema:</strong> Operadores caminhavam 40 metros para buscar parafusos e buchas a cada montagem.
+                            </p>
+                            <p class="text-xs text-slate-400 leading-relaxed">
+                                <strong>Protótipo Sujo (R$ 0):</strong> A equipe usou caixas de papelão reaproveitadas ao lado da bancada para simular uma estante inclinada gravitacional (Flow Rack) durante um turno inteiro.
+                            </p>
+                        </div>
+                        <div class="pt-2 border-t border-slate-900 text-[11px] text-sky-400 font-medium">
+                            <i class="fa-solid fa-check-double mr-1"></i> Resultado: Ajustaram a altura ideal antes da serralheria soldar o aço.
+                        </div>
+                    </div>
+
+                    <!-- Exemplo 3 -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 flex flex-col justify-between space-y-3 hover:border-orange-500/40 transition">
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-purple-500/20 text-purple-400">Apontamento Digital</span>
+                                <i class="fa-solid fa-mobile-screen-button text-slate-500"></i>
+                            </div>
+                            <h4 class="text-sm font-bold text-white">3. Telas Desenhadas em Fichas (Paper Prototype)</h4>
+                            <p class="text-xs text-slate-300 leading-relaxed">
+                                <strong>Problema:</strong> A empresa queria criar um aplicativo próprio para apontar paradas de máquina.
+                            </p>
+                            <p class="text-xs text-slate-400 leading-relaxed">
+                                <strong>Protótipo Sujo (R$ 12):</strong> Desenharam 4 telas em folhas A4. Pediram para o operador "clicar" com o dedo no papel usando luva de raspa suja de graxa.
+                            </p>
+                        </div>
+                        <div class="pt-2 border-t border-slate-900 text-[11px] text-purple-400 font-medium">
+                            <i class="fa-solid fa-check-double mr-1"></i> Resultado: Descobriram que botões pequenos não funcionam para quem usa EPI!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QUIZ RÁPIDO DE DILEMAS REALISTAS -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-orange-500"></i> Desafio de Fixação: Senso Crítico na Prática
+                    </h3>
+                    <span id="quiz1-status" class="text-xs px-2 py-1 rounded bg-slate-800 text-slate-400 font-semibold">Pendente</span>
+                </div>
+                <p class="text-xs text-slate-300">
+                    O gerente da fábrica disse: <em>"Nossos operadores erram as sequências de setup porque faltam treinamentos teóricos de 40 horas."</em> Como o técnico de PCP com Pensamento Crítico reage?
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <button onclick="answerQuiz1(1)" class="quiz1-btn p-3 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl text-left text-xs text-slate-300 transition">
+                        A) Aceita imediatamente e agenda o treinamento no auditório para todas as turmas.
+                    </button>
+                    <button onclick="answerQuiz1(2)" class="quiz1-btn p-3 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl text-left text-xs text-slate-300 transition">
+                        B) Propõe observar a operação ao vivo por 2 dias, coletar os tipos de erro e prototipar um suporte visual de instrução na própria máquina antes de aplicar treinamentos longos.
+                    </button>
+                    <button onclick="answerQuiz1(3)" class="quiz1-btn p-3 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl text-left text-xs text-slate-300 transition">
+                        C) Sugere demitir os operadores que erram e contratar pessoas com mais experiência.
+                    </button>
+                </div>
+                <div id="quiz1-feedback" class="hidden p-4 rounded-xl text-xs font-semibold"></div>
+            </div>
+
+        </section>
+
+        <!-- ========================================== -->
+        <!-- ABA 2: LAB SIMULADO 1                      -->
+        <!-- ========================================== -->
+        <section id="tab2" class="tab-content hidden space-y-8">
+
+            <!-- CABEÇALHO DO LAB -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-3">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                    <div class="flex items-center gap-2">
+                        <span class="px-2.5 py-1 bg-orange-500/20 text-orange-400 border border-orange-500/30 rounded-md text-xs font-bold uppercase">Desafio Prático</span>
+                        <h2 class="text-xl font-bold text-white">MetalMecânica TurboPress: Quadro de Controle de Setup</h2>
+                    </div>
+                    <span class="text-xs text-slate-400 flex items-center gap-1">
+                        <i class="fa-solid fa-bullseye text-orange-500"></i> Preparação para Encontro Presencial 1
+                    </span>
+                </div>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                    A fábrica possui 10 Ordens de Setup de Estamparia. Atualmente 6 estão liberadas para produção e 4 estão travadas (falta de matriz, falha na calibração ou manutenção preventiva). Seu objetivo é desenhar os requisitos, construir um protótipo físico dentro do orçamento e triar as ordens!
+                </p>
+            </div>
+
+            <!-- PASSO 1: MAPEAMENTO DE REQUISITOS (ESCOLHA DOS 6 CAMPOS) -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-base font-bold text-white">Passo 1: Seleção de Requisitos Limpos (Filtro de Poluição Visual)</h3>
+                        <p class="text-xs text-slate-400">Das 10 informações disponíveis no ERP, selecione EXATAMENTE 6 para o quadro físico sem poluí-lo.</p>
+                    </div>
+                    <span id="req-counter" class="text-xs font-bold px-3 py-1 bg-slate-800 text-orange-400 rounded-full border border-slate-700">0 / 6 selecionados</span>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-5 gap-3" id="req-grid">
+                    <!-- Gerado via JS -->
+                </div>
+
+                <div class="flex justify-between items-center pt-2">
+                    <div id="req-feedback-text" class="text-xs text-slate-400 italic">Selecione 6 itens prioritários...</div>
+                    <button onclick="confirmRequirements()" id="btn-confirm-reqs" disabled class="bg-orange-500 hover:bg-orange-600 disabled:opacity-40 text-slate-950 font-bold px-4 py-2 rounded-lg text-xs transition">
+                        Confirmar Requisitos
+                    </button>
+                </div>
+            </div>
+
+            <!-- PASSO 2: OFICINA DE PROTOTIPAÇÃO (ORÇAMENTO R$ 50 & 45 MIN) -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-6">
+                <div>
+                    <div class="flex flex-wrap justify-between items-center gap-2 mb-2">
+                        <h3 class="text-base font-bold text-white">Passo 2: Oficina do Protótipo (Desafio de Restrição Real)</h3>
+                        <div class="flex items-center gap-4 text-xs font-bold">
+                            <span class="text-slate-300">Orçamento: <span id="budget-spent" class="text-emerald-400">R$ 0,00</span> / R$ 50,00</span>
+                            <span class="text-slate-300">Tempo: <span id="time-spent" class="text-sky-400">0 min</span> / 45 min</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-400">
+                        Monte seu kit! Para o protótipo ser aprovado, você precisa cobrir 3 categorias obrigatórias: 
+                        <span class="text-orange-400 font-semibold">[1. Base/Estrutura]</span>, 
+                        <span class="text-sky-400 font-semibold">[2. Cartões/Pedidos]</span> e 
+                        <span class="text-emerald-400 font-semibold">[3. Sinalização de Status]</span>. Todas as opções individuais cabem no orçamento, mas nem todas as combinações!
+                    </p>
+                </div>
+
+                <!-- CATÁLOGO DE RECURSOS (8 OPÇÕES CALIBRADAS) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="catalog-grid">
+                    <!-- Gerado via JS -->
+                </div>
+
+                <!-- PAINEL DE VALIDAÇÃO DO CARRINHO -->
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <span class="text-xs font-bold text-slate-300 uppercase tracking-wide">Categorias Cobertas no Kit:</span>
+                        <div class="flex gap-2 text-xs">
+                            <span id="cat-base" class="px-2 py-0.5 rounded bg-slate-800 text-slate-500 border border-slate-700">1. Base</span>
+                            <span id="cat-card" class="px-2 py-0.5 rounded bg-slate-800 text-slate-500 border border-slate-700">2. Cartões</span>
+                            <span id="cat-signal" class="px-2 py-0.5 rounded bg-slate-800 text-slate-500 border border-slate-700">3. Sinalização</span>
+                        </div>
+                    </div>
+
+                    <div id="workshop-feedback" class="text-xs text-slate-400">
+                        Selecione os itens acima para montar o protótipo.
+                    </div>
+
+                    <button onclick="validateWorkshop()" id="btn-validate-workshop" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold py-2.5 rounded-lg text-xs transition">
+                        Validar Viabilidade do Protótipo
+                    </button>
+                </div>
+            </div>
+
+            <!-- PASSO 3: TRIAGEM PRÁTICA DAS 10 ORDENS DE SETUP -->
+            <div id="step3-container" class="hidden bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-base font-bold text-white">Passo 3: Triagem de Ordens no Protótipo Montado</h3>
+                    <span id="triage-status" class="text-xs font-bold text-amber-400">Aguardando Triagem</span>
+                </div>
+                <p class="text-xs text-slate-300">
+                    Abaixo estão as 10 Ordens de Setup da TurboPress. Identifique quais estão <strong>LIBERADAS</strong> e quais estão <strong>BLOQUEADAS</strong> (e o motivo da trava) de acordo com o padrão visual definido no seu protótipo.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="orders-grid">
+                    <!-- JS vai gerar as 10 ordens -->
+                </div>
+
+                <button onclick="checkTriage()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-2.5 rounded-lg text-xs transition shadow-lg">
+                    Finalizar Triagem das 10 Ordens
+                </button>
+                <div id="triage-feedback" class="hidden p-4 rounded-xl text-xs font-semibold"></div>
+            </div>
+
+            <!-- PASSO 4: FILTRO DE PENSAMENTO CRÍTICO NA PRÁTICA -->
+            <div id="step4-container" class="hidden bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                        <h3 class="text-base font-bold text-white">Passo 4: Filtro Crítico aos Palpites da Equipe</h3>
+                        <p class="text-xs text-slate-300">
+                            Durante o teste na fábrica, 4 pessoas deram sugestões sobre o seu quadro. Avalie cada uma com base nos <strong>requisitos definidos no Passo 1</strong> e decida se <strong>Aceita</strong> ou <strong>Rejeita</strong> para ver o feedback técnico detalhado:
+                        </p>
+                    </div>
+                    <span id="step4-counter" class="text-xs font-bold px-3 py-1 bg-slate-800 text-orange-400 rounded-full border border-slate-700">0 / 4 avaliados</span>
+                </div>
+
+                <div class="space-y-3" id="feedback-suggestions-grid">
+                    <!-- Gerado via JS -->
+                </div>
+            </div>
+
+            <!-- BOX CONEXÃO AULA PRESENCIAL 1 -->
+            <div class="bg-gradient-to-r from-orange-950/40 via-slate-900 to-slate-900 border border-orange-500/30 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="space-y-1">
+                    <div class="flex items-center gap-2 text-orange-400 font-bold text-sm">
+                        <i class="fa-solid fa-calendar-check"></i> Conexão Direta: Encontro Presencial 1
+                    </div>
+                    <p class="text-xs text-slate-300">
+                        No laboratório presencial, você aplicará essa exata lógica no desafio dos <strong>12 pedidos de produção da apostila</strong>, utilizando materiais físicos reais (quadro, fichas e etiquetas) para simular a fila de produção!
+                    </p>
+                </div>
+                <button onclick="toggleModal('modal-presencial')" class="whitespace-nowrap bg-orange-500 hover:bg-orange-600 text-slate-950 font-bold px-4 py-2 rounded-lg text-xs transition">
+                    Ver Roteiro Presencial 1
+                </button>
+            </div>
+
+        </section>
+
+        <!-- ========================================== -->
+        <!-- ABA 3: AULA ONLINE 2                      -->
+        <!-- ========================================== -->
+        <section id="tab3" class="tab-content hidden space-y-8">
+
+            <!-- HERO CASO JUICERO VS PCP -->
+            <div class="bg-gradient-to-r from-slate-900 via-slate-900 to-slate-800 border border-slate-800 rounded-2xl p-6 sm:p-8 relative overflow-hidden shadow-2xl">
+                <div class="relative z-10 max-w-3xl space-y-3">
+                    <span class="px-3 py-1 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded-full text-xs font-semibold">
+                        <i class="fa-solid fa-triangle-exclamation"></i> O Caso Juicero (US$ 699) vs. Chão de Fábrica
+                    </span>
+                    <h2 class="text-2xl font-extrabold text-white">Viabilidade Econômica Não É Quanto Custa Criar, É Quanto Valor Retorna!</h2>
+                    <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
+                        A startup <em>Juicero</em> levantou US$ 120 milhões para criar uma máquina supertecnológica de espremer suco conectada ao Wi-Fi por US$ 699. Meses depois, jornalistas descobriram que era possível espremer os pacotes de suco da própria marca com as mãos mais rápido do que a máquina! Resultado: falência total.
+                    </p>
+                    <div class="p-3 bg-slate-950/70 border border-slate-800 rounded-xl text-xs text-slate-300 space-y-1">
+                        <span class="font-bold text-amber-400 uppercase">Armadilha equivalente no PCP:</span>
+                        <p>Comprar um sistema touch-screen de apontamento industrial de R$ 200 mil que exige 12 cliques por peça, quando um quadro Kanban físico com leitor de código de barras de R$ 300 resolve o problema com 1 segundo por peça.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACORDEÕES CONCEITUAIS DE CUSTOS E MÉTRICAS FINANCIAL -->
+            <div class="space-y-4">
+                <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-calculator text-orange-500"></i> Conceitos Financeiros com Exemplos Industriais
+                </h3>
+
+                <!-- CUSTOS NO PCP -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+                    <button onclick="toggleAccordion('acc-cost')" class="w-full px-6 py-4 text-left font-semibold text-slate-100 bg-slate-800/50 hover:bg-slate-800 flex justify-between items-center transition">
+                        <span><i class="fa-solid fa-tags text-orange-400 mr-2"></i> Classificação de Custos na Indústria (Direto, Indireto, Fixo, Variável, Oportunidade, Sunk)</span>
+                        <i id="acc-cost-icon" class="fa-solid fa-chevron-down text-slate-400"></i>
+                    </button>
+                    <div id="acc-cost" class="hidden p-6 border-t border-slate-800 space-y-4 bg-slate-900/60">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                                <span class="font-bold text-orange-400 block">📌 Custos Diretos vs. Indiretos</span>
+                                <p class="text-slate-300"><strong>Direto:</strong> Matéria-prima (aço da lata), hora do operador da máquina. <br><strong>Indireto:</strong> Iluminação do galpão, salário do supervisor de qualidade.</p>
+                            </div>
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                                <span class="font-bold text-sky-400 block">📌 Custos Fixos vs. Variáveis</span>
+                                <p class="text-slate-300"><strong>Fixo:</strong> Aluguel da fábrica (paga mesmo se produzir zero). <br><strong>Variável:</strong> Consumo de energia das prensas (aumenta se produzir mais).</p>
+                            </div>
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                                <span class="font-bold text-amber-400 block">📌 Custo de Oportunidade</span>
+                                <p class="text-slate-300">O retorno que a empresa DEIXOU de ganhar ao escolher investir R$ 50 mil no Projeto A em vez de aplicar no Projeto B ou no mercado financeiro.</p>
+                            </div>
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                                <span class="font-bold text-rose-400 block">📌 Sunk Cost (Custo Irrecuperável)</span>
+                                <p class="text-slate-300">Dinheiro já gasto no passado que NÃO PODE ser recuperado. Nunca tome decisões futuras tentando "honrar" um dinheiro que já sumiu!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- INDICADORES FINANCEIROS -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+                    <button onclick="toggleAccordion('acc-metrics')" class="w-full px-6 py-4 text-left font-semibold text-slate-100 bg-slate-800/50 hover:bg-slate-800 flex justify-between items-center transition">
+                        <span><i class="fa-solid fa-chart-pie text-emerald-400 mr-2"></i> Indicadores de Viabilidade: VPL, TIR, Payback e IR</span>
+                        <i id="acc-metrics-icon" class="fa-solid fa-chevron-down text-slate-400"></i>
+                    </button>
+                    <div id="acc-metrics" class="hidden p-6 border-t border-slate-800 space-y-4 bg-slate-900/60">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-1">
+                                <span class="font-bold text-emerald-400 block">VPL (Valor Presente Líquido)</span>
+                                <p class="text-slate-300">Traz todos os ganhos futuros para o valor de hoje descontando a taxa de juros. <strong>VPL > 0 = Projeto dá lucro!</strong></p>
+                            </div>
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-1">
+                                <span class="font-bold text-sky-400 block">TIR (Taxa Interna de Retorno)</span>
+                                <p class="text-slate-300">A rentabilidade percentual do projeto. Deve ser <strong>MAIOR que a TMA</strong> (Taxa Mínima de Atratividade da empresa).</p>
+                            </div>
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-1">
+                                <span class="font-bold text-amber-400 block">Payback Simples / Descontado</span>
+                                <p class="text-slate-300">O tempo exato (em meses ou anos) necessário para recuperar todo o investimento inicial feito no projeto.</p>
+                            </div>
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-1">
+                                <span class="font-bold text-purple-400 block">IR (Índice de Rentabilidade)</span>
+                                <p class="text-slate-300">Razão entre o valor presente dos benefícios e o investimento. <strong>IR > 1,0</strong> indica viabilidade.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SIMULADOR FINANCEIRO INTERATIVO COM ANÁLISE DE SENSIBILIDADE -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-6">
+                <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+                    <div>
+                        <h3 class="text-base font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-sliders text-orange-500"></i> Simulador Financeiro & Análise de Sensibilidade
+                        </h3>
+                        <p class="text-xs text-slate-400">Ajuste os parâmetros do projeto de melhoria no PCP e alterne entre cenários de risco.</p>
+                    </div>
+
+                    <!-- BOTÕES DE CENÁRIOS -->
+                    <div class="flex gap-2">
+                        <button onclick="setScenario('pessimistic')" id="scen-pessimistic" class="px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:text-white text-xs font-semibold">Pessimista</button>
+                        <button onclick="setScenario('probable')" id="scen-probable" class="px-3 py-1.5 rounded-lg border border-orange-500 bg-orange-500/20 text-orange-400 text-xs font-semibold">Provável</button>
+                        <button onclick="setScenario('optimistic')" id="scen-optimistic" class="px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:text-white text-xs font-semibold">Otimista</button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- SLIDERS DE ENTRADA -->
+                    <div class="space-y-4 bg-slate-950 p-5 rounded-xl border border-slate-800">
+                        <div>
+                            <div class="flex justify-between text-xs font-bold mb-1">
+                                <span class="text-slate-300">Investimento Inicial (CAPEX):</span>
+                                <span id="val-capex" class="text-orange-400">R$ 20.000</span>
+                            </div>
+                            <input type="range" id="input-capex" min="5000" max="100000" step="5000" value="20000" oninput="updateFinancialSim()" class="w-full accent-orange-500">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs font-bold mb-1">
+                                <span class="text-slate-300">Economia Mensal Gerada (Redução de Setup/Refugo):</span>
+                                <span id="val-savings" class="text-emerald-400">R$ 3.500 / mês</span>
+                            </div>
+                            <input type="range" id="input-savings" min="500" max="15000" step="500" value="3500" oninput="updateFinancialSim()" class="w-full accent-emerald-500">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs font-bold mb-1">
+                                <span class="text-slate-300">Custo Operacional Mensal (Manutenção/Insumos):</span>
+                                <span id="val-opex" class="text-rose-400">R$ 500 / mês</span>
+                            </div>
+                            <input type="range" id="input-opex" min="0" max="5000" step="100" value="500" oninput="updateFinancialSim()" class="w-full accent-rose-500">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs font-bold mb-1">
+                                <span class="text-slate-300">Taxa Mínima de Atratividade (TMA anual):</span>
+                                <span id="val-tma" class="text-sky-400">12% a.a.</span>
+                            </div>
+                            <input type="range" id="input-tma" min="6" max="24" step="1" value="12" oninput="updateFinancialSim()" class="w-full accent-sky-500">
+                        </div>
+                    </div>
+
+                    <!-- RESULTADOS E PARECER -->
+                    <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 flex flex-col justify-between space-y-4">
+                        <div class="grid grid-cols-2 gap-3 text-center">
+                            <div class="p-3 bg-slate-900 rounded-lg border border-slate-800">
+                                <span class="text-slate-400 text-xs block">VPL (12 meses)</span>
+                                <span id="res-vpl" class="text-lg font-black text-emerald-400">R$ +12.450</span>
+                            </div>
+                            <div class="p-3 bg-slate-900 rounded-lg border border-slate-800">
+                                <span class="text-slate-400 text-xs block">TIR Estimada</span>
+                                <span id="res-tir" class="text-lg font-black text-sky-400">42% a.a.</span>
+                            </div>
+                            <div class="p-3 bg-slate-900 rounded-lg border border-slate-800">
+                                <span class="text-slate-400 text-xs block">Payback Simples</span>
+                                <span id="res-payback" class="text-lg font-black text-amber-400">6,7 meses</span>
+                            </div>
+                            <div class="p-3 bg-slate-900 rounded-lg border border-slate-800">
+                                <span class="text-slate-400 text-xs block">Índice Rentabilidade</span>
+                                <span id="res-ir" class="text-lg font-black text-purple-400">1,62</span>
+                            </div>
+                        </div>
+
+                        <div id="fin-verdict" class="p-4 rounded-xl text-xs font-medium space-y-1 bg-emerald-500/10 border border-emerald-500/30 text-emerald-300">
+                            <!-- JS atualiza parecer -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DESAFIO PRÁTICO DE CLASSIFICAÇÃO DE CUSTOS & SUNK COST -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-base font-bold text-white">Desafio Prático: Classificação de Custos & Armadilha do Sunk Cost</h3>
+                    <span id="cost-challenge-status" class="text-xs px-2 py-1 rounded bg-slate-800 text-slate-400 font-semibold">Pendente</span>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="cost-items-container">
+                    <!-- Gerado via JS -->
+                </div>
+            </div>
+
+            <!-- CONSTRUTOR DE MATRIZ DE RISCOS (PROBABILIDADE X IMPACTO) -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+                <h3 class="text-base font-bold text-white">Matriz de Gestão de Riscos do Protótipo</h3>
+                <p class="text-xs text-slate-400">Mapeie os riscos do seu projeto de melhoria do PCP para definir planos preventivos.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                        <span class="text-xs font-bold text-rose-400 block">Risco 1: Resistência dos Operadores</span>
+                        <p class="text-xs text-slate-300">Equipe ignorar o quadro e continuar usando anotações em papel de pão.</p>
+                        <select id="risk1-plan" onchange="updateRiskMatrix()" class="w-full bg-slate-900 border border-slate-700 text-xs rounded p-2 text-slate-200">
+                            <option value="none">Selecione uma ação...</option>
+                            <option value="force">Obrigá-los com advertência por escrito</option>
+                            <option value="co-create">Co-criar o protótipo com os operadores no Lab Presencial</option>
+                        </select>
+                    </div>
+
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                        <span class="text-xs font-bold text-amber-400 block">Risco 2: Perda de Cartões Físicos</span>
+                        <p class="text-xs text-slate-300">Fichas de papel caírem no chão sujo de óleo do galpão.</p>
+                        <select id="risk2-plan" onchange="updateRiskMatrix()" class="w-full bg-slate-900 border border-slate-700 text-xs rounded p-2 text-slate-200">
+                            <option value="none">Selecione uma ação...</option>
+                            <option value="laminate">Plastificar cartões com suporte magnético reforçado</option>
+                            <option value="reprint">Imprimir 100 cópias em papel simples toda semana</option>
+                        </select>
+                    </div>
+
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                        <span class="text-xs font-bold text-sky-400 block">Risco 3: Falha de Sincronia com ERP</span>
+                        <p class="text-xs text-slate-300">Quadro físico mostrar status diferente do sistema oficial.</p>
+                        <select id="risk3-plan" onchange="updateRiskMatrix()" class="w-full bg-slate-900 border border-slate-700 text-xs rounded p-2 text-slate-200">
+                            <option value="none">Selecione uma ação...</option>
+                            <option value="routine">Definir rotina diária de 2 min de checagem na troca de turno</option>
+                            <option value="ignore">Confiar apenas no quadro e desabilitar o ERP</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="risk-feedback" class="text-xs text-slate-400 font-medium"></div>
+            </div>
+
+        </section>
+
+        <!-- ========================================== -->
+        <!-- ABA 4: LAB SIMULADO 2                      -->
+        <!-- ========================================== -->
+        <section id="tab4" class="tab-content hidden space-y-8">
+
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-2">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xl font-bold text-white">Lab 2: Testes de Usabilidade, Iteração & Pitch</h2>
+                    <span class="text-xs text-slate-400">Preparação para Encontro Presencial 2</span>
+                </div>
+                <p class="text-xs text-slate-300">
+                    Neste laboratório você colocará o protótipo v1.0 à prova com testes cronometrados reais, corrigirá as falhas encontradas gerando a v2.0 e apresentará um Pitch de 2 minutos para a banca industrial!
+                </p>
+            </div>
+
+            <!-- PASSO 1: RODADA 1 DE TESTE CRONOMETRADO NA V1.0 -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-base font-bold text-white">Passo 1: Rodada 1 de Teste de Usabilidade (Protótipo v1.0)</h3>
+                    <span id="test1-timer" class="text-sm font-mono font-bold text-orange-400 bg-slate-950 px-3 py-1 rounded border border-slate-800">Tempo: 0.0s</span>
+                </div>
+                <p class="text-xs text-slate-300">
+                    Imagine que você é o supervisor da linha. Responda às 3 perguntas abaixo consultando o protótipo v1.0 (que tem falhas sutis como falta de legenda de cor e falta de responsável pela pendência):
+                </p>
+
+                <!-- CARD MOCK DO PROTÓTIPO V1.0 -->
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
+                    <div class="text-xs font-bold text-slate-400 uppercase">Visualização do Quadro v1.0 (Sem legenda nem setor responsável):</div>
+                    <div class="grid grid-cols-3 gap-2 text-center text-xs">
+                        <div class="p-2 bg-slate-800 rounded border-l-4 border-emerald-500">OP-101 (Matriz A)</div>
+                        <div class="p-2 bg-slate-800 rounded border-l-4 border-rose-500">OP-102 (Matriz B)</div>
+                        <div class="p-2 bg-slate-800 rounded border-l-4 border-amber-500">OP-103 (Matriz C)</div>
+                    </div>
+                </div>
+
+                <!-- PERGUNTAS DE USABILIDADE 1 -->
+                <div class="space-y-3 text-xs" id="usability-q-v1">
+                    <div class="p-3 bg-slate-950 rounded-lg border border-slate-800 space-y-2">
+                        <span class="font-bold text-slate-200">1. Qual a situação exata da OP-102?</span>
+                        <div class="flex gap-2">
+                            <button onclick="answerTest1(1, false)" class="t1q1-btn px-3 py-1.5 bg-slate-900 border border-slate-700 rounded hover:bg-slate-800">Pronta para produzir</button>
+                            <button onclick="answerTest1(1, true)" class="t1q1-btn px-3 py-1.5 bg-slate-900 border border-slate-700 rounded hover:bg-slate-800">Bloqueada por motivo não identificado no quadro</button>
+                        </div>
+                    </div>
+                    <div class="p-3 bg-slate-950 rounded-lg border border-slate-800 space-y-2">
+                        <span class="font-bold text-slate-200">2. Quem deve ser cobrado para destravar a OP-103?</span>
+                        <div class="flex gap-2">
+                            <button onclick="answerTest1(2, true)" class="t1q2-btn px-3 py-1.5 bg-slate-900 border border-slate-700 rounded hover:bg-slate-800">Não dá para saber pelo quadro v1.0</button>
+                            <button onclick="answerTest1(2, false)" class="t1q2-btn px-3 py-1.5 bg-slate-900 border border-slate-700 rounded hover:bg-slate-800">O Almoxarife</button>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="finishTest1()" id="btn-finish-test1" class="bg-orange-500 hover:bg-orange-600 text-slate-950 font-bold px-4 py-2 rounded-lg text-xs transition">
+                    Concluir Rodada 1 de Testes
+                </button>
+                <div id="test1-results" class="hidden p-4 bg-slate-950 rounded-xl border border-slate-800 text-xs space-y-2"></div>
+            </div>
+
+            <!-- PASSO 2 & 3: ITERAÇÃO E RETESTE COM V2.0 -->
+            <div id="step2-usability-container" class="hidden bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-6">
+                <div>
+                    <h3 class="text-base font-bold text-white">Passo 2: Análise Crítica e Escolha de Iterações para v2.0</h3>
+                    <p class="text-xs text-slate-400">Você possui 100 pontos de esforço de ajuste. Escolha as melhorias com base nos dados do teste:</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="iteration-options">
+                    <label class="p-3 bg-slate-950 border border-slate-800 rounded-xl flex items-start gap-3 cursor-pointer">
+                        <input type="checkbox" id="iter-legend" value="30" onchange="calcIterationBudget()" class="mt-1 accent-orange-500">
+                        <div class="text-xs">
+                            <span class="font-bold text-white block">Adicionar Legenda Fixa de Cores (30 pts)</span>
+                            <span class="text-slate-400">Elimina dúvidas sobre o significado das tarjetas.</span>
+                        </div>
+                    </label>
+
+                    <label class="p-3 bg-slate-950 border border-slate-800 rounded-xl flex items-start gap-3 cursor-pointer">
+                        <input type="checkbox" id="iter-owner" value="40" onchange="calcIterationBudget()" class="mt-1 accent-orange-500">
+                        <div class="text-xs">
+                            <span class="font-bold text-white block">Badge do Setor Responsável (40 pts)</span>
+                            <span class="text-slate-400">Mostra se a trava é da Manutenção, PCP ou Almoxarifado.</span>
+                        </div>
+                    </label>
+
+                    <label class="p-3 bg-slate-950 border border-slate-800 rounded-xl flex items-start gap-3 cursor-pointer">
+                        <input type="checkbox" id="iter-qr" value="50" onchange="calcIterationBudget()" class="mt-1 accent-orange-500">
+                        <div class="text-xs">
+                            <span class="font-bold text-white block">QR Code para Integração ERP (50 pts)</span>
+                            <span class="text-slate-400">Recurso tecnológico avançado, porém consome metade do esforço.</span>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="flex justify-between items-center">
+                    <span class="text-xs font-bold text-slate-300">Pontos de Esforço Utilizados: <span id="iter-points-spent" class="text-orange-400">0</span> / 100</span>
+                    <button onclick="runTest2()" id="btn-run-test2" disabled class="bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white font-bold px-4 py-2 rounded-lg text-xs transition">
+                        Rodar Teste de Usabilidade na v2.0
+                    </button>
+                </div>
+
+                <!-- DASHBOARD COMPARATIVO ANTES VS DEPOIS -->
+                <div id="test-comparison-dashboard" class="hidden bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-4">
+                    <h4 class="text-xs font-bold text-orange-400 uppercase tracking-wider">Painel Comparativo de Desempenho (Validação Empírica)</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center text-xs">
+                        <div class="p-3 bg-slate-900 rounded-lg border border-slate-800">
+                            <span class="text-slate-400 block">Tempo Médio de Leitura</span>
+                            <span class="text-slate-400 text-xs line-through">v1: 24.5s</span>
+                            <span class="text-emerald-400 font-bold block text-sm">v2: 4.2s (-82%)</span>
+                        </div>
+                        <div class="p-3 bg-slate-900 rounded-lg border border-slate-800">
+                            <span class="text-slate-400 block">Taxa de Erro na Triagem</span>
+                            <span class="text-slate-400 text-xs line-through">v1: 66% de erros</span>
+                            <span class="text-emerald-400 font-bold block text-sm">v2: 0% de erros</span>
+                        </div>
+                        <div class="p-3 bg-slate-900 rounded-lg border border-slate-800">
+                            <span class="text-slate-400 block">Honestidade Científica (Limitação)</span>
+                            <span class="text-amber-400 font-medium block text-xs">Ainda exige atualização manual a cada troca de turno.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PASSO 4: SIMULADOR DE PITCH DE 2 MINUTOS (ORATÓRIA & DIALÉTICA) -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-6">
+                <div>
+                    <h3 class="text-base font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-microphone text-orange-500"></i> Laboratório de Pitch de 2 Minutos para a Banca Industrial
+                    </h3>
+                    <p class="text-xs text-slate-400">
+                        Monte a estrutura do seu Pitch escolhendo a abordagem para cada um dos 5 blocos obrigatórios:
+                    </p>
+                </div>
+
+                <div class="space-y-4" id="pitch-builder-grid">
+                    <!-- Gerado via JS -->
+                </div>
+
+                <button onclick="evaluatePitch()" class="w-full bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-slate-950 font-black py-3 rounded-xl text-sm transition shadow-xl">
+                    Apresentar Pitch para a Banca SENAI
+                </button>
+
+                <div id="pitch-feedback" class="hidden p-5 bg-slate-950 rounded-xl border border-slate-800 space-y-3"></div>
+            </div>
+
+            <!-- BOX CONEXÃO ENCONTRO PRESENCIAL 2 -->
+            <div class="bg-gradient-to-r from-emerald-950/40 via-slate-900 to-slate-900 border border-emerald-500/30 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="space-y-1">
+                    <div class="flex items-center gap-2 text-emerald-400 font-bold text-sm">
+                        <i class="fa-solid fa-award"></i> Conexão Direta: Encontro Presencial 2
+                    </div>
+                    <p class="text-xs text-slate-300">
+                        No segundo encontro presencial, você apresentará este mesmo <strong>Pitch de 2 minutos + Demonstração Prática de 3 minutos</strong> para a turma e para o docente, defendendo os dados do seu protótipo iterado!
+                    </p>
+                </div>
+                <button onclick="toggleModal('modal-presencial')" class="whitespace-nowrap bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-4 py-2 rounded-lg text-xs transition">
+                    Ver Checklist da Apresentação
+                </button>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 border-t border-slate-800 py-4 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-2">
+            <span> SENAI PCP - Unidade Curricular: Prototipagem de Projetos</span>
+            <span>Metodologia 80/20 | Encontros Presenciais 1 e 2</span>
+        </div>
+    </footer>
+
+    <!-- MODAL: COLA E GUIA DOS ENCONTROS PRESENCIAIS -->
+    <div id="modal-presencial" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-3xl w-full max-h-[85vh] overflow-y-auto p-6 space-y-6 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-clipboard-check text-orange-500"></i> Roteiro Completo dos Encontros Presenciais
+                </h3>
+                <button onclick="toggleModal('modal-presencial')" class="text-slate-400 hover:text-white p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- PRESENCIAL 1 -->
+            <div class="space-y-3">
+                <div class="inline-flex items-center gap-2 px-2.5 py-1 bg-orange-500/20 text-orange-400 border border-orange-500/30 rounded text-xs font-bold uppercase">
+                    Encontro Presencial 1 (Lab Físico)
+                </div>
+                <ul class="text-xs text-slate-300 space-y-2 list-disc list-inside">
+                    <li><strong>Desafio:</strong> Mapear e construir o protótipo físico do quadro de controle para 12 pedidos de produção.</li>
+                    <li><strong>Restrição:</strong> Orçamento teto de R$ 50,00 e tempo limite de 45 minutos para finalização.</li>
+                    <li><strong>Checklist de Entrega:</strong> O quadro precisa conter estrutura visual, cartões identificadores e etiquetas de travamento/motivo.</li>
+                </ul>
+            </div>
+
+            <!-- PRESENCIAL 2 -->
+            <div class="space-y-3 border-t border-slate-800 pt-4">
+                <div class="inline-flex items-center gap-2 px-2.5 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded text-xs font-bold uppercase">
+                    Encontro Presencial 2 (Testes & Apresentação Final)
+                </div>
+                <ul class="text-xs text-slate-300 space-y-2 list-disc list-inside">
+                    <li><strong>Teste de Usabilidade ao Vivo:</strong> Executar cronometragem com colegas assumindo os papéis de operador e PCP.</li>
+                    <li><strong>Demonstração de 3 Minutos:</strong> Explicar a simulação prática e os ganhos de tempo obtidos na v2.0.</li>
+                    <li><strong>Pitch de 2 Minutos:</strong> Apresentar problema, viabilidade financeira (VPL/Payback) e limitações com honestidade científica.</li>
+                </ul>
+            </div>
+
+            <div class="pt-2 text-right">
+                <button onclick="toggleModal('modal-presencial')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold px-4 py-2 rounded-lg text-xs transition border border-slate-700">
+                    Entendido, Voltar ao Guia
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LÓGICA COMPLETA -->
+    <script>
+        // ESTADO GLOBAL DA APLICAÇÃO
+        const state = {
+            progress: {
+                accsRead: 0,
+                quiz1: false,
+                reqsDone: false,
+                workshopDone: false,
+                triageDone: false,
+                suggestionsDone: false,
+                costChallengeDone: false,
+                riskDone: false,
+                test1Done: false,
+                test2Done: false,
+                pitchDone: false
+            },
+            lab1: {
+                selectedReqs: [],
+                selectedItems: [],
+                triageAnswers: {}
+            },
+            lab2: {
+                test1Time: 0,
+                test1Score: 0,
+                selectedPitch: {}
+            }
+        };
+
+        // DADOS DO LAB 1: REQUISITOS (10 OPÇÕES)
+        const requirementsData = [
+            { id: 1, title: 'Número da OP', desc: 'Identificação única do lote', core: true },
+            { id: 2, title: 'Código da Matriz / Molde', desc: 'Ferramental necessário', core: true },
+            { id: 3, title: 'Quantidade de Peças', desc: 'Volume a ser estampado', core: true },
+            { id: 4, title: 'Status (Pronto / Travado)', desc: 'Sinalização visual imediata', core: true },
+            { id: 5, title: 'Motivo do Bloqueio', desc: 'Falta de material, manuten., etc.', core: true },
+            { id: 6, title: 'Setor Responsável pela Trava', desc: 'Quem deve atuar', core: true },
+            { id: 7, title: 'Foto do Operador da Máquina', desc: 'Elemento decorativo', core: false },
+            { id: 8, title: 'Histórico de Manutenção 2022', desc: 'Dados legados irrelevantes', core: false },
+            { id: 9, title: 'Cor Preferida do Cliente', desc: 'Informação não operacional', core: false },
+            { id: 10, title: 'CPF do Almoxarife', desc: 'Dado pessoal desnecessário', core: false }
+        ];
+
+        // DADOS DO LAB 1: CATÁLOGO DE RECURSOS (8 OPÇÕES CALIBRADAS R$8 a R$35)
+        const catalogData = [
+            { id: 1, name: 'Quadro Papel Kraft Reforçado', price: 10, time: 10, category: 'base', catName: 'Base', icon: 'fa-scroll' },
+            { id: 2, name: 'Painel MDF Cortado a Laser', price: 34, time: 25, category: 'base', catName: 'Base Premium', icon: 'fa-board-border' },
+            { id: 3, name: 'Folhas Sulfite + Fita Crepe', price: 8, time: 10, category: 'card', catName: 'Cartões Simples', icon: 'fa-note-sticky' },
+            { id: 4, name: 'Fichas Cartolina Impressas Padrão', price: 14, time: 15, category: 'card', catName: 'Cartões Padrão', icon: 'fa-id-card' },
+            { id: 5, name: 'Post-its Simples 1 Cor (Amarelo)', price: 10, time: 10, category: 'signal', catName: 'Sinalização Básica', icon: 'fa-tag' },
+            { id: 6, name: 'Kit Etiquetas Coloridas + Post-its 3 Cores', price: 16, time: 10, category: 'signal', catName: 'Sinalização Completa', icon: 'fa-tags' },
+            { id: 7, name: 'Ímãs Personalizados 3D Impressos', price: 28, time: 25, category: 'card', catName: 'Cartões 3D', icon: 'fa-magnet' },
+            { id: 8, name: 'Planilha Protótipo no Tablet', price: 30, time: 25, category: 'base', catName: 'Base Digital', icon: 'fa-tablet-screen-button' }
+        ];
+
+        // DADOS DO LAB 1: 10 ORDENS DE SETUP DA TURBOPRESS
+        const setupOrders = [
+            { id: 'OP-201', matrix: 'M-01', qty: '500 un', status: 'ready', detail: 'Matriz e matéria-prima no pé da máquina' },
+            { id: 'OP-202', matrix: 'M-04', qty: '1200 un', status: 'ready', detail: 'Liberado pelo PCP e Inspeção' },
+            { id: 'OP-203', matrix: 'M-02', qty: '300 un', status: 'blocked', reason: 'Falta de Molde', sector: 'Almoxarifado' },
+            { id: 'OP-204', matrix: 'M-05', qty: '800 un', status: 'ready', detail: 'Matriz limpa e ajustada' },
+            { id: 'OP-205', matrix: 'M-03', qty: '450 un', status: 'blocked', reason: 'Vazamento de Óleo', sector: 'Manutenção' },
+            { id: 'OP-206', matrix: 'M-01', qty: '600 un', status: 'ready', detail: 'Tudo pronto' },
+            { id: 'OP-207', matrix: 'M-06', qty: '1500 un', status: 'blocked', reason: 'Aguardando Calibração', sector: 'Qualidade' },
+            { id: 'OP-208', matrix: 'M-02', qty: '900 un', status: 'ready', detail: 'Liberado' },
+            { id: 'OP-209', matrix: 'M-07', qty: '200 un', status: 'ready', detail: 'Liberado' },
+            { id: 'OP-210', matrix: 'M-04', qty: '750 un', status: 'blocked', reason: 'Falta de Chapa Aço 1020', sector: 'PCP / Compras' }
+        ];
+
+        // INICIALIZAÇÃO DA APLICAÇÃO AO CARREGAR
+        window.onload = function() {
+            renderRequirementsGrid();
+            renderCatalogGrid();
+            renderSetupOrders();
+            renderSuggestionsGrid();
+            renderCostItems();
+            renderPitchBuilder();
+            updateGlobalProgress();
+        };
+
+        // NAVEGAÇÃO POR ABAS
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.remove('hidden');
+            document.getElementById('btn-' + tabId).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // TOGGLE MODAL
+        function toggleModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.toggle('hidden');
+        }
+
+        // TOGGLE ACORDEÕES
+        function toggleAccordion(accId) {
+            const acc = document.getElementById(accId);
+            const icon = document.getElementById(accId + '-icon');
+            if (acc.classList.contains('hidden')) {
+                acc.classList.remove('hidden');
+                if(icon) icon.style.transform = 'rotate(180deg)';
+                state.progress.accsRead++;
+                updateGlobalProgress();
+            } else {
+                acc.classList.add('hidden');
+                if(icon) icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // BARRA DE PROGRESSO GLOBAL
+        function updateGlobalProgress() {
+            let totalTasks = 10;
+            let completed = 0;
+            if(state.progress.quiz1) completed++;
+            if(state.progress.reqsDone) completed++;
+            if(state.progress.workshopDone) completed++;
+            if(state.progress.triageDone) completed++;
+            if(state.progress.suggestionsDone) completed++;
+            if(state.progress.costChallengeDone) completed++;
+            if(state.progress.riskDone) completed++;
+            if(state.progress.test1Done) completed++;
+            if(state.progress.test2Done) completed++;
+            if(state.progress.pitchDone) completed++;
+
+            let pct = Math.round((completed / totalTasks) * 100);
+            document.getElementById('global-progress-bar').style.width = pct + '%';
+            document.getElementById('global-progress-text').innerText = pct + '%';
+        }
+
+        // ==========================================
+        // LÓGICA DA ABA 1
+        // ==========================================
+        function answerQuiz1(option) {
+            const fb = document.getElementById('quiz1-feedback');
+            const st = document.getElementById('quiz1-status');
+            fb.classList.remove('hidden', 'bg-emerald-500/10', 'bg-rose-500/10', 'text-emerald-300', 'text-rose-300');
+            
+            if (option === 2) {
+                fb.classList.add('bg-emerald-500/10', 'border', 'border-emerald-500/30', 'text-emerald-300');
+                fb.innerHTML = '<i class="fa-solid fa-circle-check mr-2"></i><strong>Excelente! Pensamento Crítico em ação!</strong> Em vez de aceitar uma suposição cara, você propõe investigar a causa raiz no chão de fábrica e testar uma solução simples (suporte visual) antes de investir em treinamentos longos.';
+                st.innerText = 'Concluído';
+                st.className = 'text-xs px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 font-bold';
+                state.progress.quiz1 = true;
+                updateGlobalProgress();
+            } else {
+                fb.classList.add('bg-rose-500/10', 'border', 'border-rose-500/30', 'text-rose-300');
+                fb.innerHTML = '<i class="fa-solid fa-triangle-exclamation mr-2"></i><strong>Senso Comum detectado!</strong> Aceitar hipóteses sem coletar dados reais ou culpar o operador gera gastos desnecessários. Reavalie a opção B!';
+            }
+        }
+
+        // ==========================================
+        // LÓGICA DA ABA 2 (LAB 1)
+        // ==========================================
+        function renderRequirementsGrid() {
+            const grid = document.getElementById('req-grid');
+            grid.innerHTML = requirementsData.map(r => `
+                <button onclick="toggleReq(${r.id})" id="req-card-${r.id}" class="req-card p-3 bg-slate-950 border border-slate-800 rounded-xl text-left hover:border-slate-700 transition flex flex-col justify-between space-y-1">
+                    <div>
+                        <span class="font-bold text-xs text-white block">${r.title}</span>
+                        <span class="text-[10px] text-slate-400 block">${r.desc}</span>
+                    </div>
+                    <span id="req-badge-${r.id}" class="text-[9px] font-bold text-slate-500 uppercase">Não selecionado</span>
+                </button>
+            `).join('');
+        }
+
+        function toggleReq(id) {
+            const idx = state.lab1.selectedReqs.indexOf(id);
+            if (idx > -1) {
+                state.lab1.selectedReqs.splice(idx, 1);
+            } else {
+                if (state.lab1.selectedReqs.length < 6) {
+                    state.lab1.selectedReqs.push(id);
+                }
+            }
+            updateReqsUI();
+        }
+
+        function updateReqsUI() {
+            requirementsData.forEach(r => {
+                const card = document.getElementById(`req-card-${r.id}`);
+                const badge = document.getElementById(`req-badge-${r.id}`);
+                const isSelected = state.lab1.selectedReqs.includes(r.id);
+                
+                if (isSelected) {
+                    card.classList.add('border-orange-500', 'bg-orange-500/10');
+                    card.classList.remove('border-slate-800', 'bg-slate-950');
+                    badge.innerText = 'Selecionado';
+                    badge.className = 'text-[9px] font-bold text-orange-400 uppercase';
+                } else {
+                    card.classList.remove('border-orange-500', 'bg-orange-500/10');
+                    card.classList.add('border-slate-800', 'bg-slate-950');
+                    badge.innerText = 'Não selecionado';
+                    badge.className = 'text-[9px] font-bold text-slate-500 uppercase';
+                }
+            });
+
+            const count = state.lab1.selectedReqs.length;
+            document.getElementById('req-counter').innerText = `${count} / 6 selecionados`;
+            const btn = document.getElementById('btn-confirm-reqs');
+            btn.disabled = count !== 6;
+        }
+
+        function confirmRequirements() {
+            const hasDistractions = state.lab1.selectedReqs.some(id => !requirementsData.find(r => r.id === id).core);
+            const fbText = document.getElementById('req-feedback-text');
+            
+            if (!hasDistractions) {
+                fbText.innerHTML = '<span class="text-emerald-400 font-bold"><i class="fa-solid fa-check"></i> Requisitos Perfeitos!</span> Todos os 6 campos selecionados atendem PCP, Operador e Manutenção sem poluição visual!';
+                state.progress.reqsDone = true;
+            } else {
+                fbText.innerHTML = '<span class="text-amber-400 font-bold"><i class="fa-solid fa-triangle-exclamation"></i> Requisitos Aceitáveis, mas com Poluição!</span> Você incluiu informações decorativas ou legadas que consomem espaço útil no quadro.';
+                state.progress.reqsDone = true;
+            }
+            updateGlobalProgress();
+        }
+
+        function renderCatalogGrid() {
+            const grid = document.getElementById('catalog-grid');
+            grid.innerHTML = catalogData.map(item => `
+                <div onclick="toggleCatalogItem(${item.id})" id="catalog-card-${item.id}" class="p-3 bg-slate-950 border border-slate-800 rounded-xl cursor-pointer hover:border-slate-700 transition space-y-2 flex flex-col justify-between">
+                    <div class="space-y-1">
+                        <div class="flex items-center justify-between">
+                            <i class="fa-solid ${item.icon} text-orange-400 text-sm"></i>
+                            <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-400 font-semibold">${item.catName}</span>
+                        </div>
+                        <span class="font-bold text-xs text-white block">${item.name}</span>
+                    </div>
+                    <div class="flex justify-between items-center text-xs font-bold pt-2 border-t border-slate-900">
+                        <span class="text-emerald-400">R$ ${item.price.toFixed(2)}</span>
+                        <span class="text-sky-400">${item.time} min</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleCatalogItem(id) {
+            const idx = state.lab1.selectedItems.indexOf(id);
+            if (idx > -1) {
+                state.lab1.selectedItems.splice(idx, 1);
+            } else {
+                state.lab1.selectedItems.push(id);
+            }
+            updateCatalogUI();
+        }
+
+        function updateCatalogUI() {
+            let totalPrice = 0;
+            let totalTime = 0;
+            let categories = { base: false, card: false, signal: false };
+
+            catalogData.forEach(item => {
+                const card = document.getElementById(`catalog-card-${item.id}`);
+                const isSelected = state.lab1.selectedItems.includes(item.id);
+                if (isSelected) {
+                    card.classList.add('border-orange-500', 'bg-orange-500/10');
+                    card.classList.remove('border-slate-800', 'bg-slate-950');
+                    totalPrice += item.price;
+                    totalTime += item.time;
+                    categories[item.category] = true;
+                } else {
+                    card.classList.remove('border-orange-500', 'bg-orange-500/10');
+                    card.classList.add('border-slate-800', 'bg-slate-950');
+                }
+            });
+
+            document.getElementById('budget-spent').innerText = `R$ ${totalPrice.toFixed(2)}`;
+            document.getElementById('time-spent').innerText = `${totalTime} min`;
+
+            // Update category badges
+            document.getElementById('cat-base').className = categories.base ? 'px-2 py-0.5 rounded bg-orange-500/20 text-orange-400 border border-orange-500/40 font-bold' : 'px-2 py-0.5 rounded bg-slate-800 text-slate-500 border border-slate-700';
+            document.getElementById('cat-card').className = categories.card ? 'px-2 py-0.5 rounded bg-sky-500/20 text-sky-400 border border-sky-500/40 font-bold' : 'px-2 py-0.5 rounded bg-slate-800 text-slate-500 border border-slate-700';
+            document.getElementById('cat-signal').className = categories.signal ? 'px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 font-bold' : 'px-2 py-0.5 rounded bg-slate-800 text-slate-500 border border-slate-700';
+        }
+
+        function validateWorkshop() {
+            let totalPrice = 0;
+            let totalTime = 0;
+            let categories = { base: false, card: false, signal: false };
+
+            state.lab1.selectedItems.forEach(id => {
+                const item = catalogData.find(i => i.id === id);
+                totalPrice += item.price;
+                totalTime += item.time;
+                categories[item.category] = true;
+            });
+
+            const fb = document.getElementById('workshop-feedback');
+
+            if (totalPrice > 50) {
+                fb.innerHTML = '<span class="text-rose-400 font-bold"><i class="fa-solid fa-circle-xmark mr-1"></i> Orçamento Estourado!</span> O valor total (R$ ' + totalPrice.toFixed(2) + ') ultrapassa o teto de R$ 50,00. Remova itens caros!';
+                return;
+            }
+            if (totalTime > 45) {
+                fb.innerHTML = '<span class="text-rose-400 font-bold"><i class="fa-solid fa-clock mr-1"></i> Tempo Limite Excedido!</span> A montagem leva ' + totalTime + ' min (máximo permitido: 45 min). Escolha opções mais rápidas!';
+                return;
+            }
+            if (!categories.base || !categories.card || !categories.signal) {
+                fb.innerHTML = '<span class="text-amber-400 font-bold"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Kit Incompleto!</span> Seu protótipo precisa cobrir as 3 dimensões obrigatórias: Base, Cartões e Sinalização Visual.';
+                return;
+            }
+
+            fb.innerHTML = '<span class="text-emerald-400 font-bold"><i class="fa-solid fa-circle-check mr-1"></i> Protótipo Viável Aprovado!</span> Seu kit custou R$ ' + totalPrice.toFixed(2) + ' e será montado em ' + totalTime + ' min. Avançando para a Triagem!';
+            state.progress.workshopDone = true;
+            document.getElementById('step3-container').classList.remove('hidden');
+            updateGlobalProgress();
+        }
+
+        function renderSetupOrders() {
+            const grid = document.getElementById('orders-grid');
+            grid.innerHTML = setupOrders.map(o => `
+                <div class="p-3 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-between text-xs">
+                    <div>
+                        <span class="font-bold text-white block">${o.id} - Matriz ${o.matrix}</span>
+                        <span class="text-slate-400 block">${o.qty} | ${o.detail}</span>
+                    </div>
+                    <select id="triage-select-${o.id}" class="bg-slate-900 border border-slate-700 rounded p-1.5 text-xs text-slate-200">
+                        <option value="none">Status...</option>
+                        <option value="ready">LIBERADO</option>
+                        <option value="blocked">BLOQUEADO</option>
+                    </select>
+                </div>
+            `).join('');
+        }
+
+        function checkTriage() {
+            let correct = 0;
+            setupOrders.forEach(o => {
+                const val = document.getElementById(`triage-select-${o.id}`).value;
+                if (val === o.status) correct++;
+            });
+
+            const fb = document.getElementById('triage-feedback');
+            fb.classList.remove('hidden');
+            if (correct === 10) {
+                fb.className = 'p-4 rounded-xl text-xs font-semibold bg-emerald-500/10 border border-emerald-500/30 text-emerald-300';
+                fb.innerHTML = '<i class="fa-solid fa-circle-check mr-2"></i><strong>Triagem 100% Perfeita!</strong> Você identificou corretamente as 6 ordens liberadas e as 4 travadas no chão de fábrica.';
+                state.progress.triageDone = true;
+                document.getElementById('step4-container').classList.remove('hidden');
+                updateGlobalProgress();
+            } else {
+                fb.className = 'p-4 rounded-xl text-xs font-semibold bg-rose-500/10 border border-rose-500/30 text-rose-300';
+                fb.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-2"></i>Você acertou ${correct} de 10 ordens. Verifique a lista com atenção e tente novamente!`;
+            }
+        }
+
+        function renderSuggestionsGrid() {
+            const grid = document.getElementById('feedback-suggestions-grid');
+            const suggestions = [
+                {
+                    id: 1,
+                    author: 'Diretor Comercial',
+                    role: 'Visita esporádica ao galpão',
+                    text: 'Mudar o fundo de todo o quadro e dos cartões para azul-marinho escuro, pois é a cor institucional da nossa empresa.',
+                    correct: 'reject'
+                },
+                {
+                    id: 2,
+                    author: 'Operador da Prensa (2º Turno)',
+                    role: 'Usuário direto do quadro',
+                    text: 'Além das cores verde e vermelha, desenhar um símbolo grande (Círculo = Liberado / Triângulo com "!" = Bloqueado), porque a lâmpada perto da prensa reflete no plástico à noite.',
+                    correct: 'accept'
+                },
+                {
+                    id: 3,
+                    author: 'Líder do Almoxarifado',
+                    role: 'Responsável por separar matrizes e chapas',
+                    text: 'Destacar na etiqueta vermelha se a trava é por falta de Matéria-Prima ou de Matriz, para eu não perder tempo indo até a máquina à toa.',
+                    correct: 'accept'
+                },
+                {
+                    id: 4,
+                    author: 'Colega de Outro Setor',
+                    role: 'Sugestão de corredor',
+                    text: 'Colar a foto 3x4 do operador, o CPF dele e o histórico das últimas 50 manutenções da máquina em cada cartão de pedido.',
+                    correct: 'reject'
+                }
+            ];
+
+            grid.innerHTML = suggestions.map(s => `
+                <div id="sug-card-${s.id}" class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-3 text-xs transition-all">
+                    <div class="flex flex-wrap justify-between items-center gap-2">
+                        <div>
+                            <span class="font-bold text-orange-400 text-sm">${s.author}</span>
+                            <span class="text-[11px] text-slate-400 ml-2">(${s.role})</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="answerSuggestion(${s.id}, 'accept')" id="sug-acc-${s.id}" class="px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg font-semibold hover:border-emerald-500 hover:text-emerald-400 transition flex items-center gap-1">
+                                <i class="fa-solid fa-check"></i> Aceitar Sugestão
+                            </button>
+                            <button onclick="answerSuggestion(${s.id}, 'reject')" id="sug-rej-${s.id}" class="px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg font-semibold hover:border-rose-500 hover:text-rose-400 transition flex items-center gap-1">
+                                <i class="fa-solid fa-xmark"></i> Rejeitar Sugestão
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-slate-200 italic bg-slate-900/90 p-3 rounded-lg border border-slate-800/80">"${s.text}"</p>
+                    <div id="sug-fb-${s.id}" class="hidden p-3 rounded-lg text-xs leading-relaxed"></div>
+                </div>
+            `).join('');
+        }
+
+        const suggestionsAnsweredMap = {};
+
+        function answerSuggestion(id, choice) {
+            const fb = document.getElementById(`sug-fb-${id}`);
+            const btnAcc = document.getElementById(`sug-acc-${id}`);
+            const btnRej = document.getElementById(`sug-rej-${id}`);
+            const card = document.getElementById(`sug-card-${id}`);
+
+            const feedbackData = {
+                1: {
+                    correct: 'reject',
+                    rightMsg: '<strong>Decisão Crítica Correta (Rejeitado)!</strong> No PCP, a legibilidade a distância supera a vaidade estética. Fundo azul-marinho escuro anula o contraste da caneta preta e dificulta a leitura rápida a 3 metros (requisito de condição observável).',
+                    wrongMsg: '<strong>Cuidado com a Subserviência sem Senso Crítico!</strong> Você aceitou a opinião apenas pelo cargo de quem falou. Usar azul-marinho escuro destrói o contraste visual do quadro no galpão e viola o requisito de leitura rápida em menos de 5 segundos.'
+                },
+                2: {
+                    correct: 'accept',
+                    rightMsg: '<strong>Decisão Crítica Correta (Aceito)!</strong> Esta sugestão veio de quem usa o protótipo na prática. Usar símbolos geométricos (redundância visual) resolve problemas de reflexo de luz e daltonismo a custo zero!',
+                    wrongMsg: '<strong>Erro de Análise!</strong> Você rejeitou uma contribuição valiosa do usuário real. Sem símbolos geométricos de apoio, o reflexo noturno ou o daltonismo causarão erros de leitura de status na troca de turno.'
+                },
+                3: {
+                    correct: 'accept',
+                    rightMsg: '<strong>Decisão Crítica Correta (Aceito)!</strong> Está totalmente alinhado aos requisitos de "Motivo do Bloqueio" e "Setor Responsável". Permite que o almoxarifado aja imediatamente na causa raiz.',
+                    wrongMsg: '<strong>Erro de Análise!</strong> Rejeitar essa informação obriga o almoxarife a caminhar até a prensa só para perguntar o que está faltando, atrasando a liberação do setup.'
+                },
+                4: {
+                    correct: 'reject',
+                    rightMsg: '<strong>Decisão Crítica Correta (Rejeitado)!</strong> Você protegeu o escopo do protótipo! Dados pessoais (CPF/Foto) e histórico antigo geram poluição visual severa e não ajudam a decidir qual ordem entra em máquina.',
+                    wrongMsg: '<strong>Armadilha da Poluição Visual!</strong> Ao aceitar tudo para "agradar o colega", seu cartão ficou abarrotado de letras miúdas inúteis, escondendo o que realmente importa: o status da OP e o ferramental.'
+                }
+            };
+
+            const info = feedbackData[id];
+            const isCorrect = (choice === info.correct);
+
+            // Reset estilos dos botões
+            btnAcc.className = 'px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg font-semibold text-slate-400 transition flex items-center gap-1';
+            btnRej.className = 'px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg font-semibold text-slate-400 transition flex items-center gap-1';
+
+            if (choice === 'accept') {
+                btnAcc.className = isCorrect
+                    ? 'px-3 py-1.5 bg-emerald-500/20 border border-emerald-500 text-emerald-300 rounded-lg font-bold flex items-center gap-1'
+                    : 'px-3 py-1.5 bg-rose-500/20 border border-rose-500 text-rose-300 rounded-lg font-bold flex items-center gap-1';
+            } else {
+                btnRej.className = isCorrect
+                    ? 'px-3 py-1.5 bg-emerald-500/20 border border-emerald-500 text-emerald-300 rounded-lg font-bold flex items-center gap-1'
+                    : 'px-3 py-1.5 bg-rose-500/20 border border-rose-500 text-rose-300 rounded-lg font-bold flex items-center gap-1';
+            }
+
+            fb.classList.remove('hidden');
+            if (isCorrect) {
+                card.className = 'p-4 bg-slate-950 border border-emerald-500/40 rounded-xl space-y-3 text-xs transition-all';
+                fb.className = 'p-3 rounded-lg text-xs leading-relaxed bg-emerald-500/10 border border-emerald-500/30 text-emerald-300';
+                fb.innerHTML = `<i class="fa-solid fa-circle-check mr-1.5 text-emerald-400"></i> ${info.rightMsg}`;
+                suggestionsAnsweredMap[id] = true;
+            } else {
+                card.className = 'p-4 bg-slate-950 border border-rose-500/40 rounded-xl space-y-3 text-xs transition-all';
+                fb.className = 'p-3 rounded-lg text-xs leading-relaxed bg-rose-500/10 border border-rose-500/30 text-rose-300';
+                fb.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1.5 text-rose-400"></i> ${info.wrongMsg}`;
+                suggestionsAnsweredMap[id] = false;
+            }
+
+            const correctCount = Object.values(suggestionsAnsweredMap).filter(Boolean).length;
+            const counterEl = document.getElementById('step4-counter');
+            if (counterEl) {
+                counterEl.innerText = `${correctCount} / 4 corretos`;
+                if (correctCount === 4) {
+                    counterEl.className = 'text-xs font-bold px-3 py-1 bg-emerald-500/20 text-emerald-400 rounded-full border border-emerald-500/40';
+                }
+            }
+
+            if (correctCount === 4) {
+                state.progress.suggestionsDone = true;
+                updateGlobalProgress();
+            }
+        }
+
+        // ==========================================
+        // LÓGICA DA ABA 3 (AULA 2: CUSTOS & VPL)
+        // ==========================================
+        let currentScenario = 'probable';
+
+        function setScenario(scen) {
+            currentScenario = scen;
+            document.querySelectorAll('#scen-pessimistic, #scen-probable, #scen-optimistic').forEach(b => {
+                b.className = 'px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 text-xs font-semibold';
+            });
+            document.getElementById(`scen-${scen}`).className = 'px-3 py-1.5 rounded-lg border border-orange-500 bg-orange-500/20 text-orange-400 text-xs font-semibold';
+
+            if (scen === 'pessimistic') {
+                document.getElementById('input-capex').value = 35000;
+                document.getElementById('input-savings').value = 1500;
+                document.getElementById('input-opex').value = 1000;
+            } else if (scen === 'probable') {
+                document.getElementById('input-capex').value = 20000;
+                document.getElementById('input-savings').value = 3500;
+                document.getElementById('input-opex').value = 500;
+            } else if (scen === 'optimistic') {
+                document.getElementById('input-capex').value = 15000;
+                document.getElementById('input-savings').value = 6000;
+                document.getElementById('input-opex').value = 300;
+            }
+            updateFinancialSim();
+        }
+
+        function updateFinancialSim() {
+            const capex = parseFloat(document.getElementById('input-capex').value);
+            const savings = parseFloat(document.getElementById('input-savings').value);
+            const opex = parseFloat(document.getElementById('input-opex').value);
+            const tma = parseFloat(document.getElementById('input-tma').value) / 100;
+
+            document.getElementById('val-capex').innerText = `R$ ${capex.toLocaleString('pt-BR')}`;
+            document.getElementById('val-savings').innerText = `R$ ${savings.toLocaleString('pt-BR')} / mês`;
+            document.getElementById('val-opex').innerText = `R$ ${opex.toLocaleString('pt-BR')} / mês`;
+            document.getElementById('val-tma').innerText = `${(tma * 100).toFixed(0)}% a.a.`;
+
+            const netMonthly = savings - opex;
+            const annualCashFlow = netMonthly * 12;
+
+            // VPL Simplificado (1 ano)
+            const vpl = (annualCashFlow / (1 + tma)) - capex;
+            const paybackMonths = netMonthly > 0 ? (capex / netMonthly) : 999;
+            const ir = capex > 0 ? ((annualCashFlow / (1 + tma)) / capex) : 0;
+            const tirEst = capex > 0 ? ((annualCashFlow - capex) / capex) * 100 : 0;
+
+            document.getElementById('res-vpl').innerText = `R$ ${vpl > 0 ? '+' : ''}${vpl.toLocaleString('pt-BR', { maximumFractionDigits: 0 })}`;
+            document.getElementById('res-vpl').className = vpl > 0 ? 'text-lg font-black text-emerald-400' : 'text-lg font-black text-rose-400';
+
+            document.getElementById('res-tir').innerText = `${tirEst.toFixed(0)}% a.a.`;
+            document.getElementById('res-payback').innerText = paybackMonths < 100 ? `${paybackMonths.toFixed(1)} meses` : 'Invável';
+            document.getElementById('res-ir').innerText = ir.toFixed(2);
+
+            const verdict = document.getElementById('fin-verdict');
+            if (vpl > 0 && paybackMonths <= 12) {
+                verdict.className = 'p-4 rounded-xl text-xs font-medium space-y-1 bg-emerald-500/10 border border-emerald-500/30 text-emerald-300';
+                verdict.innerHTML = '<strong>Parecer: PROJETO ALTAMENTE VIÁVEL!</strong> O VPL é positivo e o retorno ocorre dentro do primeiro ano de operação no PCP.';
+            } else {
+                verdict.className = 'p-4 rounded-xl text-xs font-medium space-y-1 bg-rose-500/10 border border-rose-500/30 text-rose-300';
+                verdict.innerHTML = '<strong>Parecer: PROJETO ARRISCADO / INVIÁVEL.</strong> Os custos operacionais suplantam a economia gerada ou o payback ultrapassa o horizonte razoável.';
+            }
+        }
+
+        function renderCostItems() {
+            const container = document.getElementById('cost-items-container');
+            const items = [
+                { id: 1, text: 'Energia elétrica consumida pelas prensas de estamparia.', options: ['Custo Direto Variável', 'Custo Fixo Indireto'], correct: 0 },
+                { id: 2, text: 'Salário do Gerente de Planta Industrial.', options: ['Custo Indireto Fixo', 'Custo Direto Variável'], correct: 0 },
+                { id: 3, text: 'R$ 40 mil já gastos em um software antigo que não funciona mais.', options: ['Sunk Cost (Custo Irrecuperável)', 'Custo de Oportunidade'], correct: 0 },
+                { id: 4, text: 'Lucro deixado de ganhar ao investir na Linha A em vez da Linha B.', options: ['Custo de Oportunidade', 'Depreciação'], correct: 0 }
+            ];
+
+            container.innerHTML = items.map(it => `
+                <div class="p-3 bg-slate-950 border border-slate-800 rounded-xl space-y-2 text-xs">
+                    <p class="text-slate-200 font-medium">${it.text}</p>
+                    <div class="flex gap-2">
+                        ${it.options.map((opt, oIdx) => `
+                            <button onclick="answerCostChallenge(${it.id}, ${oIdx})" id="cost-btn-${it.id}-${oIdx}" class="px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded hover:bg-slate-800 text-slate-300">
+                                ${opt}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        let costScore = 0;
+        function answerCostChallenge(itemId, optionIdx) {
+            const corrects = { 1: 0, 2: 0, 3: 0, 4: 0 };
+            const isCorrect = (optionIdx === corrects[itemId]);
+            
+            const btn = document.getElementById(`cost-btn-${itemId}-${optionIdx}`);
+            if (isCorrect) {
+                btn.className = 'px-2.5 py-1.5 bg-emerald-500/20 border border-emerald-500/40 rounded text-emerald-300 font-bold';
+                costScore++;
+            } else {
+                btn.className = 'px-2.5 py-1.5 bg-rose-500/20 border border-rose-500/40 rounded text-rose-300 font-bold';
+            }
+
+            if (costScore >= 3) {
+                state.progress.costChallengeDone = true;
+                document.getElementById('cost-challenge-status').innerText = 'Concluído';
+                document.getElementById('cost-challenge-status').className = 'text-xs px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 font-bold';
+                updateGlobalProgress();
+            }
+        }
+
+        function updateRiskMatrix() {
+            const r1 = document.getElementById('risk1-plan').value;
+            const r2 = document.getElementById('risk2-plan').value;
+            const r3 = document.getElementById('risk3-plan').value;
+
+            const fb = document.getElementById('risk-feedback');
+            if (r1 === 'co-create' && r2 === 'laminate' && r3 === 'routine') {
+                fb.innerHTML = '<span class="text-emerald-400 font-bold"><i class="fa-solid fa-check"></i> Excelente Matriz de Contingência!</span> Você escolheu soluções preventivas sustentáveis para o chão de fábrica.';
+                state.progress.riskDone = true;
+                updateGlobalProgress();
+            } else if (r1 !== 'none' && r2 !== 'none' && r3 !== 'none') {
+                fb.innerHTML = '<span class="text-amber-400">Alguns planos de ação são reativos ou ineficientes. Reavalie as opções!</span>';
+            }
+        }
+
+        // ==========================================
+        // LÓGICA DA ABA 4 (LAB 2)
+        // ==========================================
+        let test1StartTime = 0;
+        let test1Answers = { q1: false, q2: false };
+
+        function answerTest1(qNum, isCorrect) {
+            test1Answers['q' + qNum] = isCorrect;
+            const btns = document.querySelectorAll(`.t1q${qNum}-btn`);
+            btns.forEach(b => b.classList.remove('border-orange-500', 'bg-orange-500/20'));
+            event.target.classList.add('border-orange-500', 'bg-orange-500/20');
+        }
+
+        function finishTest1() {
+            const res = document.getElementById('test1-results');
+            res.classList.remove('hidden');
+            res.innerHTML = `
+                <div class="text-emerald-400 font-bold"><i class="fa-solid fa-clock-rotate-left"></i> Rodada 1 Concluída em 24.5s</div>
+                <p class="text-slate-300">Você sentiu a dificuldade do operador: Sem legenda de cor e sem setor responsável, a triagem demorou muito tempo e gerou margem para erros graves de produção!</p>
+            `;
+            state.progress.test1Done = true;
+            document.getElementById('step2-usability-container').classList.remove('hidden');
+            updateGlobalProgress();
+        }
+
+        function calcIterationBudget() {
+            let pts = 0;
+            if(document.getElementById('iter-legend').checked) pts += 30;
+            if(document.getElementById('iter-owner').checked) pts += 40;
+            if(document.getElementById('iter-qr').checked) pts += 50;
+
+            document.getElementById('iter-points-spent').innerText = pts;
+            const btn = document.getElementById('btn-run-test2');
+            btn.disabled = (pts === 0 || pts > 100);
+        }
+
+        function runTest2() {
+            document.getElementById('test-comparison-dashboard').classList.remove('hidden');
+            state.progress.test2Done = true;
+            updateGlobalProgress();
+        }
+
+        function renderPitchBuilder() {
+            const grid = document.getElementById('pitch-builder-grid');
+            const sections = [
+                {
+                    id: 1,
+                    title: '1. O Problema Industrial (30 seg)',
+                    options: [
+                        { text: 'No 3º turno, as trocas de molde demoram 45 min porque ninguém sabe se o ferramental está liberado.', score: 10 },
+                        { text: 'A fábrica é meio antiga e as pessoas não gostam de trabalhar direito.', score: 0 }
+                    ]
+                },
+                {
+                    id: 2,
+                    title: '2. Proposta de Valor do Protótipo (30 seg)',
+                    options: [
+                        { text: 'Desenvolvemos um quadro de controle visual de baixo custo (R$ 40) que sinaliza o status em 5 segundos.', score: 10 },
+                        { text: 'Queremos comprar um tablet touch de R$ 10 mil para cada operador.', score: 2 }
+                    ]
+                },
+                {
+                    id: 3,
+                    title: '3. Evidências dos Testes de Usabilidade (30 seg)',
+                    options: [
+                        { text: 'Na v2.0 do protótipo, reduzimos o tempo de leitura de 24,5s para 4,2s e zeramos os erros de triagem.', score: 10 },
+                        { text: 'Acho que todo mundo gostou bastante do quadro novo.', score: 0 }
+                    ]
+                },
+                {
+                    id: 4,
+                    title: '4. Viabilidade Econômica & Payback (30 seg)',
+                    options: [
+                        { text: 'Com economia mensal de R$ 3.500 em setup, o VPL em 1 ano é de R$ 12.450 com payback em 6,7 meses.', score: 10 },
+                        { text: 'O projeto se paga muito rápido, confia na gente.', score: 0 }
+                    ]
+                }
+            ];
+
+            grid.innerHTML = sections.map(sec => `
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                    <span class="font-bold text-xs text-orange-400 block">${sec.title}</span>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                        ${sec.options.map((opt, oIdx) => `
+                            <button onclick="selectPitchChoice(${sec.id}, ${opt.score})" id="pitch-opt-${sec.id}-${oIdx}" class="pitch-btn-${sec.id} p-3 bg-slate-900 border border-slate-800 rounded-lg text-left hover:border-slate-700 text-slate-300">
+                                ${opt.text}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectPitchChoice(secId, score) {
+            state.lab2.selectedPitch[secId] = score;
+            const btns = document.querySelectorAll(`.pitch-btn-${secId}`);
+            btns.forEach(b => b.classList.remove('border-orange-500', 'bg-orange-500/20'));
+            event.target.classList.add('border-orange-500', 'bg-orange-500/20');
+        }
+
+        function evaluatePitch() {
+            let totalScore = 0;
+            Object.values(state.lab2.selectedPitch).forEach(s => totalScore += s);
+
+            const fb = document.getElementById('pitch-feedback');
+            fb.classList.remove('hidden');
+
+            if (totalScore >= 35) {
+                fb.innerHTML = `
+                    <div class="text-emerald-400 font-bold text-sm"><i class="fa-solid fa-trophy mr-2"></i> Parecer da Banca SENAI: PITCHAPROVADO COM LOUVOR! (Pontuação: ${totalScore}/40)</div>
+                    <p class="text-xs text-slate-300">Sua oratória foi baseada em dados empíricos, números de payback claros e demonstração de usabilidade validada! Você está pronto para os Encontros Presenciais!</p>
+                `;
+                state.progress.pitchDone = true;
+                updateGlobalProgress();
+            } else {
+                fb.innerHTML = `
+                    <div class="text-amber-400 font-bold text-sm"><i class="fa-solid fa-triangle-exclamation mr-2"></i> Parecer da Banca: PITCH MUITO VAGO (Pontuação: ${totalScore}/40)</div>
+                    <p class="text-xs text-slate-300">A banca industrial exige números concretos (VPL, tempo economizado, redução de erros). Substitua as opiniões por evidências dos seus testes!</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
